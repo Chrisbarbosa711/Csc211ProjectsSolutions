@@ -7,16 +7,16 @@ A: .word 0 : 5 #Array of 5 words to contain the values in array A
 .text 
 main:
 la   $t0, A           # Loads address of array A.
-li   $t3, 1           # Stores 6 to t3.
-sw   $t3, 0($t0)      # Stores the value of t3, 6, at the address in t0. Essentially A[0] = 6.
-li   $t3, 2           # Stores 34 to t3.
-sw   $t3, 4($t0)      # Stores the value of t3, 34, at the address in t0. Essentially A[1] = 34.
-li   $t3, 3           # Stores -7 to t3.
-sw   $t3, 8($t0)      # Stores the value of t3, -7, at the address in t0. Essentially A[2] = -7.
-li   $t3, 4           # Stores 3 to t3.
-sw   $t3, 12($t0)     # Stores the value of t3, 3, at the address in t0. Essentially A[3] = 3.
-li   $t3, 5           # Stores 0 to t3.
-sw   $t3, 16($t0)     # Stores the value of t3, 0, at the address in t0. Essentially A[4] = 0.
+li   $t3, 1           # Stores 1 to t3.
+sw   $t3, 0($t0)      # Stores the value of t3, 1, at the address in t0. Essentially A[0] = 1.
+li   $t3, 2           # Stores 2 to t3.
+sw   $t3, 4($t0)      # Stores the value of t3, 2, at the address in t0. Essentially A[1] = 2.
+li   $t3, 3           # Stores 3 to t3.
+sw   $t3, 8($t0)      # Stores the value of t3, 3, at the address in t0. Essentially A[2] = 3.
+li   $t3, 4           # Stores 4 to t3.
+sw   $t3, 12($t0)     # Stores the value of t3, 4, at the address in t0. Essentially A[3] = 4.
+li   $t3, 5           # Stores 5 to t3.
+sw   $t3, 16($t0)     # Stores the value of t3, 5, at the address in t0. Essentially A[4] = 5.
 addi $t1, $zero, 0 #the sum variable
 addi $t2, $zero, 0 #iterator for print
 addi $t3, $zero, 5 #ending number
@@ -26,7 +26,7 @@ la $t0, A #resets t0 so we can pass it to the next loop
 j Summation_3
 Cont:
 addi $t2, $zero, 0 #iterator for print
-la $t0, A
+la $t0, A #sets t0 to array A's address
 jal Loop1
 la $a0, sumMessage #store the sumMessage string in a0
 li $v0, 4 #tells the system we want to print a string
