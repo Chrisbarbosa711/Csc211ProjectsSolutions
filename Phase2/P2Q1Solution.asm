@@ -1,37 +1,32 @@
 #deal with the string, \n
 .globl main
 .data 
-sumMessage: .asciiz “The sum value is:”
+sumMessage: .asciiz "The sum value is: "
 newline: .asciiz "\n"
+A: .word 0 : 5 #Array of 5 words to contain the values in array A
 .text 
 main:
-addi $t0, $zero, 5000 #storing the array in a continuous block of memory
-addi $t1, $zero, 5004
-addi $t2, $zero, 5008
-addi $t3, $zero, 5012
-addi $t4, $zero, 5016
-#initializing the values of A[5] 
-addi $t5, $zero, 1
-addi $t6, $zero, 2
-sw $t5, 0($t0) # store 1 in DM[5000]
-sw $t6, 0($t1) # store 2 in DM[5004]
-addi $t5, $zero, 3 #overwriting the stored value so that we can use the registers over and over
-addi $t6, $zero, 4
-sw $t5, 0($t2) # store 3 in DM[5008]
-sw $t6, 0($t3) # store 4 in DM[5012]
-addi $t5, $zero, 5 
-sw $t5, 0($t4) # store 5 in DM[5016] 
-#now the entire array values are stored in 5000-5016
+la   $t0, A           # Loads address of array A.
+li   $t3, 1           # Stores 6 to t3.
+sw   $t3, 0($t0)      # Stores the value of t3, 6, at the address in t0. Essentially A[0] = 6.
+li   $t3, 2           # Stores 34 to t3.
+sw   $t3, 4($t0)      # Stores the value of t3, 34, at the address in t0. Essentially A[1] = 34.
+li   $t3, 3           # Stores -7 to t3.
+sw   $t3, 8($t0)      # Stores the value of t3, -7, at the address in t0. Essentially A[2] = -7.
+li   $t3, 4           # Stores 3 to t3.
+sw   $t3, 12($t0)     # Stores the value of t3, 3, at the address in t0. Essentially A[3] = 3.
+li   $t3, 5           # Stores 0 to t3.
+sw   $t3, 16($t0)     # Stores the value of t3, 0, at the address in t0. Essentially A[4] = 0.
 addi $t1, $zero, 0 #the sum variable
 addi $t2, $zero, 0 #iterator for print
 addi $t3, $zero, 5 #ending number
 jal Loop1 #print out the original array
 addi $t2, $zero, 0 #iterator for print
-addi $t0, $zero, 5000 #resets t0 so we can pass it to the next loop
+la $t0, A #resets t0 so we can pass it to the next loop
 j Summation_3
 Cont:
 addi $t2, $zero, 0 #iterator for print
-addi $t0, $zero, 5000
+la $t0, A
 jal Loop1
 la $a0, sumMessage #store the sumMessage string in a0
 li $v0, 4 #tells the system we want to print a string
@@ -46,7 +41,7 @@ Loop1:
       lw $t5, 0($t0) #load the value of the element into register $t5
       la $a0, ($t5) #load the element into a0 for printing
       li $v0, 1 #tells the system that we are going to print an integer
-      syscall prints the integer
+      syscall #prints the integer
       la $a0, newline #loads the newline string into a0
       li $v0, 4 #tells the system that we are going to print a string
       syscall #prints the string
