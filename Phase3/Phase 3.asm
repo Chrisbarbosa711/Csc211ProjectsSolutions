@@ -1,5 +1,5 @@
 .data
-	menu: .asciiz "Please type the number corresponding to the menu item you wish to purchase:\n1) Water ($2)\n2) Snacks($1)\n3) Sandwhiches($5)\n4) Meals($10)\nEnter a value of -1 to exit.\n" #Initializes the text for the menu
+	menu: .asciiz "\nPlease type the number corresponding to the menu item you wish to purchase:\n1) Water ($2)\n2) Snacks($1)\n3) Sandwhiches($5)\n4) Meals($10)\nEnter a value of -1 to exit.\n" #Initializes the text for the menu
 	startBal: .asciiz "\nPlease enter the amount of money you're starting with: " #Initializes the text for the starting balance.
 	remainBal: .asciiz "\nYour remaining balance is: " #Initializes the text for the remaining balance.
 	quantity: .asciiz "\nPlease enter how many you would like to purchase: " #Initializes the text for how many of an item a user would like to purchase.
@@ -16,7 +16,7 @@ syscall #Prints the string that is held in a0, in this case the starting balance
 li $v0, 5 #Prepares to accept a float input.
 syscall #Accepts and stores the user's input into v0.
 
-sw $v0, ($t6)
+move $t6, $v0
 
 j menuSelect #Jumps to the menu select subroutine.
 
@@ -41,6 +41,10 @@ la $a0, quantity
 li $v0, 4
 syscall
 
+li $v0, 5
+syscall
+
+add $t2, $zero, $zero
 add $t3, $zero, $v0
 addi $t2, $t2, 2
 mul $t1, $t2, $t3
@@ -76,6 +80,10 @@ la $a0, quantity
 li $v0, 4
 syscall
 
+li $v0, 5
+syscall
+
+add $t2, $zero, $zero
 add $t3, $zero, $v0
 addi $t2, $t2, 1
 mul $t1, $t2, $t3
@@ -111,6 +119,10 @@ la $a0, quantity
 li $v0, 4
 syscall
 
+li $v0, 5
+syscall
+
+add $t2, $zero, $zero
 add $t3, $zero, $v0
 addi $t2, $t2, 5
 mul $t1, $t2, $t3
@@ -146,6 +158,10 @@ la $a0, quantity
 li $v0, 4
 syscall
 
+li $v0, 5
+syscall
+
+add $t2, $zero, $zero
 add $t3, $zero, $v0
 addi $t2, $t2, 10
 mul $t1, $t2, $t3
