@@ -1,11 +1,12 @@
 .data
-	menu: .asciiz "\nPlease type the number corresponding to the menu item you wish to purchase:\n1) Water ($2)\n2) Snacks($1)\n3) Sandwhiches($5)\n4) Meals($10)\nEnter a value of -1 to exit.\n" #Initializes the text for the menu
-	startBal: .asciiz "\nPlease enter the amount of money you're starting with: " #Initializes the text for the starting balance.
-	remainBal: .asciiz "\nYour remaining balance is: " #Initializes the text for the remaining balance.
-	quantity: .asciiz "\nPlease enter how many you would like to purchase: " #Initializes the text for how many of an item a user would like to purchase.
+	menu: .asciiz "\nPlease type the number corresponding to the menu item you wish to purchase:\n1) Water ($2)\n2) Snacks($1)\n3) Sandwhiches($5)\n4) Meals($10)\nEnter a value of -1 to exit.\n" 		#Initializes the text for the menu
+	startBal: .asciiz "\nPlease enter the amount of money you're starting with: " 		#Initializes the text for the starting balance.
+	remainBal: .asciiz "\nYour remaining balance is: " 	#Initializes the text for the remaining balance.
+	quantity: .asciiz "\nPlease enter how many you would like to purchase: " 	#Initializes the text for how many of an item a user would like to purchase.
 	errorMessage: .asciiz "\nYou do not have enough remaining balance to complete this transaction." #Error message for if a purchase would cost more than the current remaining balance in the account.
-	purchaseComplete: .asciiz "\nYour purchase was completed successfully." #Notifies the user that the purchase was completed successfully.
-	amtPurchased: .asciiz "\nYou have purchased this many of this item: " #Initializes the text for how many of an item a user has purchased.
+	purchaseComplete: .asciiz "\nYour purchase was completed successfully." 	#Notifies the user that the purchase was completed successfully.
+	amtPurchased: .asciiz "\nYou have purchased this many of this item: " 		#Initializes the text for how many of an item a user has purchased.
+	negAmount: .asciiz "invalid option amount entered."		#If the user enters a number not valid(negative) for the options quantity
 .text
 
 main:
@@ -18,7 +19,8 @@ syscall #Accepts and stores the user's input into v0.
 
 move $t6, $v0
 
-j menuSelect #Jumps to the menu select subroutine. (NOTE)not really necessary since the flow of code will always go to menu select anyway
+j menuSelect #Jumps to the menu select subroutine. 
+#(NOTE) Not really necessary since the flow of code will always go to menu select anyway(at this point)
 
 menuSelect:
 	la $a0, menu 		#Loads the menu into the a0 register.
@@ -37,26 +39,32 @@ menuSelect:
 	beq $t0, 3, sandwhiches #If the user input is 3, which is the sandwhiches, jumps to the sandwhiches subroutine.
 	beq $t0, 4, meals 	#If the user input is 4, which is the meals option, jumps to the meals subroutine.
 
-#
+#(NOTE) added the invalid qaunity code to this option, if works correctly add to all options
 	water:
-		la $a0, quantity
+		la $a0, quantity	#Load the quantity string into $a0 for printing
 		li $v0, 4
 		syscall
 
-		li $v0, 5
+		li $v0, 5		#Setup the system to take the quanity amount as input
 		syscall
+#Must make sure the input is not invalid or negative
+		slt $at, $zero, $v0		#If the value in $v0 is < 0 then the following is false and $at is 0
+		beq $at, $zero, error2		#If so, then we branch to the following
+#If $v0, is greater than or equal to 0, then the normal flow occurs and goes to the next line
 
-		add $t2, $zero, $zero  #(NOTE) why not just do addi $t2, $zero, 0
-		add $t3, $zero, $v0
-		addi $t2, $t2, 2
-		mul $t1, $t2, $t3
+		add $t2, $zero, $zero  #(NOTE) Why not just do addi $t2, $zero, 0
+		add $t3, $zero, $v0		#Store the amount of the option they want in $t3
+		addi $t2, $t2, 2		#Water costs $2 
+		mul $t1, $t2, $t3		#Scale the cost with the amount they purchases 
 
-		slt $at, $t6, $t1
-		bne $at, $zero, error
+		slt $at, $t6, $t1		#If the total amount they purchase surpasses there current amount jump
+		bne $at, $zero, error		#to error
 
-		sub $t6, $t6, $t1
+		sub $t6, $t6, $t1 		#If no issues, subtract from the total 
 
-		la $a0, purchaseComplete
+#The following is purely arbitrary we output: the purchase was successful, the amount of the item they purchased, 
+#the total after the purchase
+		la $a0, purchaseComplete	
 		li $v0, 4
 		syscall
 
@@ -76,7 +84,7 @@ menuSelect:
 		li $v0, 1
 		syscall
 
-		j menuSelect		#return back to select screen for next input
+		j menuSelect		#Return back to select screen for next input
 
 	snacks:
 		la $a0, quantity
@@ -116,7 +124,7 @@ menuSelect:
 		li $v0, 1
 		syscall
 
-		j menuSelect 		#return for next input
+		j menuSelect 		#Return for next input
 
 	sandwhiches:
 		la $a0, quantity
@@ -156,7 +164,7 @@ menuSelect:
 		li $v0, 1
 		syscall
 
-		j menuSelect		#return to for next input
+		j menuSelect		#Return to for next input
 
 	meals:
 		la $a0, quantity
@@ -196,11 +204,20 @@ menuSelect:
 		li $v0, 1
 		syscall
 
-		j menuSelect		#return for next input
+		j menuSelect		#Return for next input
 
-#runs when there is an issue with the option selected and the amount left of the users startBal
+#Runs when there is an issue with the option selected and the amount left of the users startBal
 error: 
 	la $a0, errorMessage
+	li $v0, 4
+	syscall
+
+	j menuSelect
+
+# The following only runs when the user has entered an invalid input to the quantity question
+# (NOTE) Ideally I would want the program to simply just back to the quantity question for the given option
+error2:
+	la $a0, negAmount
 	li $v0, 4
 	syscall
 
