@@ -46,7 +46,7 @@ menuSelect:
 		li $v0, 5
 		syscall
 
-		add $t2, $zero, $zero
+		add $t2, $zero, $zero  #(NOTE) why not just do addi $t3, $zero, 0
 		add $t3, $zero, $v0
 		addi $t2, $t2, 2
 		mul $t1, $t2, $t3
