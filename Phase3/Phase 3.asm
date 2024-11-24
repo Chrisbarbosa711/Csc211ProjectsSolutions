@@ -224,10 +224,10 @@ error2:
 	j menuSelect
 
 exit:
-	la $a0, remainBal
+	la $a0, remainBal 
 	li $v0, 4
-	syscall
+	syscall			#Print out the remaining balance message
 
 	add $a0, $t6, $zero
-	li $v0, 2
-	syscall
+	li $v0, 1
+	syscall			$Output the remaining balance value 
