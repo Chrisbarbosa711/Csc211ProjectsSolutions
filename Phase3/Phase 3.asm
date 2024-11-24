@@ -229,5 +229,6 @@ exit:
 	syscall			#Print out the remaining balance message
 
 	add $a0, $t6, $zero
-	li $v0, 1
-	syscall			$Output the remaining balance value 
+	li $v0, 1		#(NOTE) Changed from 2 to 1 since in all the option you have as 1, unless you want it to be a
+				#float, then we need to change everywhere(since reading in a float is li $v0, 6)
+	syscall			#Output the remaining balance value 
