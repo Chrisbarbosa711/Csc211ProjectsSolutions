@@ -14,6 +14,7 @@ la $a0, startBal #Loads the starting balance question into the a0 register.
 li $v0, 4 #Prepares to print a string.
 syscall #Prints the string that is held in a0, in this case the starting balance question.
 
+#(NOTE) is possible that they enter 0 or a negative here as well, need to add a fix to avoid that
 li $v0, 5 #Prepares to accept a float input.
 syscall #Accepts and stores the user's input into v0.
 
