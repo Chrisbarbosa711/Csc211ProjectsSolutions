@@ -38,6 +38,7 @@ menuSelect:
 	beq $t0, 2, snacks 	#If the user input is 2, which is the snacks option, jumps to the snacks subroutine.
 	beq $t0, 3, sandwhiches #If the user input is 3, which is the sandwhiches, jumps to the sandwhiches subroutine.
 	beq $t0, 4, meals 	#If the user input is 4, which is the meals option, jumps to the meals subroutine.
+	j menuSelect		#If they enter an input which does not match any of the above option just run the menuSelect again
 
 #(NOTE) added the invalid qaunity code to this option, if works correctly add to all options
 	water:
