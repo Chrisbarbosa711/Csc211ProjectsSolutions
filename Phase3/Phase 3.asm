@@ -54,7 +54,7 @@ menuSelect:
 		beq $at, $zero, error2		#If so, then we branch to the following
 #If $v0, is greater than or equal to 0, then the normal flow occurs and goes to the next line
 
-		add $t2, $zero, $zero  #(NOTE) Why not just do addi $t2, $zero, 0
+		add $t2, $zero, $zero  
 		add $t3, $zero, $v0		#Store the amount of the option they want in $t3
 		addi $t2, $t2, 2		#Water costs $2 
 		mul $t1, $t2, $t3		#Scale the cost with the amount they purchases 
@@ -95,6 +95,8 @@ menuSelect:
 
 		li $v0, 5
 		syscall
+		slt $at, $zero, $v0		#If the value in $v0 is < 0 then the following is false and $at is 0
+		beq $at, $zero, error2		#If so, then we branch to the following
 
 		add $t2, $zero, $zero
 		add $t3, $zero, $v0
@@ -135,6 +137,8 @@ menuSelect:
 
 		li $v0, 5
 		syscall
+		slt $at, $zero, $v0		#If the value in $v0 is < 0 then the following is false and $at is 0
+		beq $at, $zero, error2		#If so, then we branch to the following
 
 		add $t2, $zero, $zero
 		add $t3, $zero, $v0
@@ -175,6 +179,8 @@ menuSelect:
 
 		li $v0, 5
 		syscall
+		slt $at, $zero, $v0		#If the value in $v0 is < 0 then the following is false and $at is 0
+		beq $at, $zero, error2		#If so, then we branch to the following
 
 		add $t2, $zero, $zero
 		add $t3, $zero, $v0
@@ -217,7 +223,6 @@ error:
 	j menuSelect
 
 # The following only runs when the user has entered an invalid input to the quantity question
-# (NOTE) Ideally I would want the program to simply just back to the quantity question for the given option
 error2:
 	la $a0, negAmount
 	li $v0, 4
