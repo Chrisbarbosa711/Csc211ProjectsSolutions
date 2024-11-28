@@ -7,18 +7,21 @@
 	purchaseComplete: .asciiz "\nYour purchase was completed successfully." 	#Notifies the user that the purchase was completed successfully.
 	amtPurchased: .asciiz "\nYou have purchased this many of this item: " 		#Initializes the text for how many of an item a user has purchased.
 	negAmount: .asciiz "invalid option amount entered."		#If the user enters a number not valid(negative) for the options quantity
+	invalidAmount: .asciiz "you entered 0 or a negative number for the starting amount"
 .text
 
 main:
-la $a0, startBal #Loads the starting balance question into the a0 register.
-li $v0, 4 #Prepares to print a string.
-syscall #Prints the string that is held in a0, in this case the starting balance question.
+la $a0, startBal 		#Loads the starting balance question into the a0 register.
+li $v0, 4 			#Prepares to print a string.
+syscall 			#Prints the string that is held in a0, in this case the starting balance question.
 
 #(NOTE) is possible that they enter 0 or a negative here as well, need to add a fix to avoid that
-li $v0, 5 #Prepares to accept a float input.
-syscall #Accepts and stores the user's input into v0.
+li $v0, 5 			#Prepares to accept a integer input.
+syscall 			#Accepts and stores the user's input into v0.
 
-move $t6, $v0
+move $t6, $v0			#We move the users input to the register $t6
+slt $at, $zero, $t6		#If 0 < our amount then we are good, if not then we branch
+beq $at, $zero, error3		#If $t6 <= 0 then the above is not true and $at = 0 
 
 j menuSelect #Jumps to the menu select subroutine. 
 #(NOTE) Not really necessary since the flow of code will always go to menu select anyway(at this point)
@@ -43,11 +46,11 @@ menuSelect:
 
 #(NOTE) added the invalid qaunity code to this option, if works correctly add to all options
 	water:
-		la $a0, quantity	#Load the quantity string into $a0 for printing
+		la $a0, quantity		#Load the quantity string into $a0 for printing
 		li $v0, 4
 		syscall
 
-		li $v0, 5		#Setup the system to take the quanity amount as input
+		li $v0, 5			#Setup the system to take the quanity amount as input
 		syscall
 #Must make sure the input is not invalid or negative
 		slt $at, $zero, $v0		#If the value in $v0 is < 0 then the following is false and $at is 0
@@ -86,8 +89,9 @@ menuSelect:
 		li $v0, 1
 		syscall
 
-		j menuSelect		#Return back to select screen for next input
+		j menuSelect			#Return back to select screen for next input
 
+#All remaining option follow the same logic as the water option
 	snacks:
 		la $a0, quantity
 		li $v0, 4
@@ -128,7 +132,7 @@ menuSelect:
 		li $v0, 1
 		syscall
 
-		j menuSelect 		#Return for next input
+		j menuSelect 			#Return for next input
 
 	sandwhiches:
 		la $a0, quantity
@@ -170,7 +174,7 @@ menuSelect:
 		li $v0, 1
 		syscall
 
-		j menuSelect		#Return to for next input
+		j menuSelect			#Return to for next input
 
 	meals:
 		la $a0, quantity
@@ -212,7 +216,7 @@ menuSelect:
 		li $v0, 1
 		syscall
 
-		j menuSelect		#Return for next input
+		j menuSelect			#Return for next input
 
 #Runs when there is an issue with the option selected and the amount left of the users startBal
 error: 
@@ -230,12 +234,19 @@ error2:
 
 	j menuSelect
 
+error3:
+	la $a0, invalidAmount
+	li $v0, 4
+	syscall
+
+	j main			#We jump back to main so that they can enter a new and valid amount
+
 exit:
 	la $a0, remainBal 
 	li $v0, 4
 	syscall			#Print out the remaining balance message
 
 	add $a0, $t6, $zero
-	li $v0, 1		#(NOTE) Changed from 2 to 1 since in all the option you have as 1, unless you want it to be a
-				#float, then we need to change everywhere(since reading in a float is li $v0, 6)
+	li $v0, 1		
+				
 	syscall			#Output the remaining balance value 
